@@ -1,0 +1,15 @@
+{
+	"name": "factoryanshproject",
+	"properties": {
+		"trustModeClaimForMi": {
+			"value": "Disabled",
+			"editable": true
+		}
+	},
+	"location": "eastus",
+	"identity": {
+		"type": "SystemAssigned",
+		"principalId": "8042179f-1a1c-4eb5-9857-3782e193e2b7",
+		"tenantId": "b1bba699-4f07-43b9-a148-e851896b07f3"
+	}
+}
