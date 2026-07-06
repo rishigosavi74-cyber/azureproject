@@ -250,7 +250,7 @@
 									"parameters": {
 										"container": "bronze",
 										"folder": {
-											"value": "cdc",
+											"value": "@{pipeline().parameters.table}_cdc",
 											"type": "Expression"
 										},
 										"file": "empty.json"
