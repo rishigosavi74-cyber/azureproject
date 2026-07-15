@@ -34,9 +34,10 @@ This project demonstrates a production-style data pipeline that:
  │                                               │
  └─────────────────────────────────────────────┘
         │                    │                │
-   Autoloader          PySpark            Jinja2-templated
-   (cloudFiles)      Transformations       Dynamic SQL Joins
-        │                    │                │
+   Autoloader          PySpark          Databricks ETL Pipeline
+   (cloudFiles)      Transformations    (Delta Live Tables +
+        │                    │           Jinja2-templated
+        │                    │           Dynamic SQL Joins)
         ▼                    ▼                ▼
               Azure Databricks + Unity Catalog
               (Governance, Access Control, Delta Lake)
@@ -75,9 +76,10 @@ This project demonstrates a production-style data pipeline that:
   - `DimUser`, `DimArtist`, `DimTrack`, `DimDate`, `FactStream`
 
 ### Gold Layer — Business-Ready Star Schema
-- Dimension and fact tables are joined into analytics-ready datasets.
-- **Jinja2 templating** dynamically generates the JOIN SQL across all dimension tables based on a configurable parameter list — meaning new dimensions can be added to the model by updating a config list, without hand-rewriting SQL.
-- Output tables are optimized for downstream BI/reporting use cases.
+- Built using a **Databricks ETL pipeline** that reads the curated Silver dimension and fact tables and prepares them for consumption.
+- Implemented using **Delta Live Tables (DLT)** for declarative, dependency-aware orchestration of the Gold layer transformations (`@dlt.table` definitions per staging/output table), giving automatic lineage tracking and pipeline health monitoring out of the box.
+- **Jinja2 templating** is used to dynamically generate the multi-table JOIN SQL across all dimension tables from a configurable parameter list — new dimensions can be added to the star schema by updating a config list, without hand-rewriting SQL each time.
+- Output tables are optimized, denormalized, and ready for downstream BI/reporting use cases.
 
 ---
 
@@ -101,6 +103,7 @@ This project demonstrates a production-style data pipeline that:
 - **Incremental ingestion design** — implemented watermark-based delta loads in ADF to avoid full reloads on every run.
 - **Streaming checkpoint management** — designed isolated checkpoint locations for previewing streaming data vs. production writes, avoiding checkpoint collisions.
 - **Unity Catalog infrastructure recovery** — diagnosed and resolved a corrupted metastore root storage credential (`DAC_DOES_NOT_EXIST`) by provisioning a new metastore, re-registering external locations, and migrating all Silver tables — restoring the pipeline without any data loss.
+- **DLT Serverless compatibility issue** — the Gold layer DLT pipeline failed under Serverless compute due to Unity Catalog credential resolution; resolved by reconfiguring the pipeline to run on a classic autoscaling cluster, after which the pipeline executed end-to-end successfully.
 - **Dynamic query generation** — replaced hardcoded multi-table JOIN SQL with a Jinja2-templated approach driven by a parameter list, making the Gold layer easily extensible.
 
 ---
