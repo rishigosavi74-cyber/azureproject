@@ -42,6 +42,9 @@ This project demonstrates a production-style data pipeline that:
               Azure Databricks + Unity Catalog
               (Governance, Access Control, Delta Lake)
 ```
+## 📸 Architecture Diagram (Visual)
+
+<img width="2720" height="1640" alt="spotify_pipeline_architecture" src="https://github.com/user-attachments/assets/bf8b8772-3ef0-4fcb-94c4-461b134a2713" />
 
 ---
 
